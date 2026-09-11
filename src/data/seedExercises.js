@@ -1,0 +1,17 @@
+export const SEED_EXERCISES = [
+  { id: 'pull-up', name: 'Pull-up', type: 'reps', category: 'pull' },
+  { id: 'chin-up', name: 'Chin-up', type: 'reps', category: 'pull' },
+  { id: 'dip', name: 'Dip', type: 'reps', category: 'push' },
+  { id: 'push-up', name: 'Push-up', type: 'reps', category: 'push' },
+  { id: 'pike-push-up', name: 'Pike push-up', type: 'reps', category: 'push' },
+  { id: 'inverted-row', name: 'Inverted row', type: 'reps', category: 'pull' },
+  { id: 'hanging-leg-raise', name: 'Hanging leg raise', type: 'reps', category: 'core' },
+  { id: 'l-sit', name: 'L-sit', type: 'hold', category: 'core' },
+  { id: 'handstand-hold', name: 'Handstand hold', type: 'hold', category: 'skill' },
+  { id: 'front-lever-hold', name: 'Front lever hold', type: 'hold', category: 'skill' },
+  { id: 'back-lever-hold', name: 'Back lever hold', type: 'hold', category: 'skill' },
+  { id: 'planche-lean', name: 'Planche lean', type: 'hold', category: 'skill' },
+  { id: 'muscle-up', name: 'Muscle-up', type: 'reps', category: 'pull' },
+  { id: 'weighted-pull-up', name: 'Weighted pull-up', type: 'weighted', category: 'pull', weightUnit: 'lb' },
+  { id: 'weighted-dip', name: 'Weighted dip', type: 'weighted', category: 'push', weightUnit: 'lb' },
+]
