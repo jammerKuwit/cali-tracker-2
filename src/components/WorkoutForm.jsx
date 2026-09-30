@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { durationInputValue, emptySet, parseDuration } from '../lib/format'
 import { DAY_TEMPLATES, DAY_LABEL } from '../lib/constants'
+import { clearDraft, draftKey, loadDraft, saveDraft } from '../lib/draft'
 import { useData } from '../context/data'
 import { createWorkout, updateWorkout } from '../services/workouts'
 import { deleteMedia, uploadMedia } from '../services/media'
@@ -89,21 +90,35 @@ function entriesHaveData(entries) {
 export default function WorkoutForm({ exercises, initialDate, existing, initialDay }) {
   const navigate = useNavigate()
   const { templates } = useData()
-  const [date, setDate] = useState(existing?.date || initialDate)
-  const [notes, setNotes] = useState(existing?.notes || '')
-  const [entries, setEntries] = useState(() =>
-    existing ? fromWorkout(existing).entries : [],
-  )
+  const [boot] = useState(() => {
+    const key = draftKey({ date: existing?.date || initialDate, workoutId: existing?.id })
+    return { key, draft: loadDraft(key) }
+  })
+  const [date, setDate] = useState(boot.draft?.date || existing?.date || initialDate)
+  const [notes, setNotes] = useState(boot.draft?.notes ?? existing?.notes ?? '')
+  const [entries, setEntries] = useState(() => {
+    if (Array.isArray(boot.draft?.entries)) return boot.draft.entries
+    if (existing) return fromWorkout(existing).entries
+    return []
+  })
   const [pickerOpen, setPickerOpen] = useState(false)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState(null)
-  const [selectedDay, setSelectedDay] = useState(existing?.day || null)
+  const [selectedDay, setSelectedDay] = useState(
+    boot.draft?.selectedDay ?? existing?.day ?? null,
+  )
   const entriesRef = useRef(entries)
-  const autoApplied = useRef(Boolean(existing))
+  const dateRef = useRef(date)
+  const notesRef = useRef(notes)
+  const dayRef = useRef(selectedDay)
+  const autoApplied = useRef(Boolean(existing) || Boolean(boot.draft))
 
   useEffect(() => {
     entriesRef.current = entries
-  }, [entries])
+    dateRef.current = date
+    notesRef.current = notes
+    dayRef.current = selectedDay
+  }, [entries, date, notes, selectedDay])
 
   useEffect(() => {
     return () => {
@@ -112,6 +127,40 @@ export default function WorkoutForm({ exercises, initialDate, existing, initialD
       })
     }
   }, [])
+
+  useEffect(() => {
+    const key = draftKey({ date, workoutId: existing?.id })
+    if (!notes?.trim() && !selectedDay && !entries.length) {
+      clearDraft(key)
+      return
+    }
+    saveDraft(key, { date, notes, selectedDay, entries })
+  }, [date, notes, entries, selectedDay, existing?.id])
+
+  useEffect(() => {
+    const onHide = () => {
+      const key = draftKey({ date: dateRef.current, workoutId: existing?.id })
+      const current = entriesRef.current
+      const currentNotes = notesRef.current
+      const currentDay = dayRef.current
+      if (!currentNotes?.trim() && !currentDay && !current.length) {
+        clearDraft(key)
+        return
+      }
+      saveDraft(key, {
+        date: dateRef.current,
+        notes: currentNotes,
+        selectedDay: currentDay,
+        entries: current,
+      })
+    }
+    window.addEventListener('pagehide', onHide)
+    document.addEventListener('visibilitychange', onHide)
+    return () => {
+      window.removeEventListener('pagehide', onHide)
+      document.removeEventListener('visibilitychange', onHide)
+    }
+  }, [existing?.id])
 
   const activeExercises = useMemo(
     () => exercises.filter((ex) => !ex.archived),
@@ -267,6 +316,8 @@ export default function WorkoutForm({ exercises, initialDate, existing, initialD
         ...mediaFields(nextExercises),
       })
 
+      clearDraft(draftKey({ date, workoutId: existing?.id }))
+      if (!existing?.id) clearDraft(draftKey({ date, workoutId: id }))
       navigate(`/workout/${id}`)
     } catch (err) {
       setError(err.message || 'Could not save workout')
