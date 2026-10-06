@@ -1,13 +1,13 @@
 import {
   addDoc,
   collection,
+  deleteDoc,
   doc,
   getDocs,
   onSnapshot,
   orderBy,
   query,
   serverTimestamp,
-  updateDoc,
   writeBatch,
 } from 'firebase/firestore'
 import { SEED_EXERCISES } from '../data/seedExercises'
@@ -56,6 +56,6 @@ export async function createExercise({ name, type, category, weightUnit = 'lb' }
   return ref.id
 }
 
-export async function archiveExercise(id, archived = true) {
-  await updateDoc(doc(db, 'exercises', id), { archived })
+export async function deleteExercise(id) {
+  await deleteDoc(doc(db, 'exercises', id))
 }

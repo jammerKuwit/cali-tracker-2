@@ -331,9 +331,14 @@ export default function WorkoutForm({ exercises, initialDate, existing, initialD
         <h1 className="page-title">{existing ? 'Edit session' : 'Log session'}</h1>
       </div>
 
-      <label className="field">
+      <label className="field date-field">
         <span>Date</span>
-        <input type="date" value={date} onChange={(e) => setDate(e.target.value)} />
+        <input
+          className="date-input"
+          type="date"
+          value={date}
+          onChange={(e) => setDate(e.target.value)}
+        />
       </label>
 
       {existing ? null : (

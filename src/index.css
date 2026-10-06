@@ -121,7 +121,7 @@ p {
   overflow-y: auto;
   overscroll-behavior: contain;
   -webkit-overflow-scrolling: touch;
-  padding: 20px 16px 72px;
+  padding: 20px 16px 80px;
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
@@ -342,7 +342,7 @@ p {
   display: grid;
   grid-template-columns: 1fr 1fr 56px 1fr 1fr;
   align-items: end;
-  padding: 8px 8px;
+  padding: 12px 8px;
   background: var(--bg);
   border-top: 1px solid var(--border);
   z-index: 20;
@@ -419,6 +419,23 @@ p {
 .field textarea {
   min-height: 88px;
   resize: vertical;
+}
+
+.date-field {
+  width: 100%;
+  align-items: stretch;
+}
+
+.field .date-input {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  text-align: center;
+}
+
+.date-input::-webkit-date-and-time-value {
+  text-align: center;
 }
 
 .chips {

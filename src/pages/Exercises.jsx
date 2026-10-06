@@ -7,7 +7,7 @@ import {
   DAY_TEMPLATES,
   EXERCISE_TYPES,
 } from '../lib/constants'
-import { archiveExercise, createExercise } from '../services/exercises'
+import { createExercise, deleteExercise } from '../services/exercises'
 import { setTemplateExercises } from '../services/templates'
 
 export default function Exercises() {
@@ -21,7 +21,6 @@ export default function Exercises() {
   const [editingDays, setEditingDays] = useState(false)
 
   const active = exercises.filter((exercise) => !exercise.archived)
-  const archived = exercises.filter((exercise) => exercise.archived)
   const byId = useMemo(
     () => Object.fromEntries(active.map((exercise) => [exercise.id, exercise])),
     [active],
@@ -95,7 +94,7 @@ export default function Exercises() {
             : Promise.resolve()
         }),
       )
-      await archiveExercise(exercise.id, true)
+      await deleteExercise(exercise.id)
     } catch (err) {
       setError(err.message || 'Could not delete exercise')
     }
@@ -265,31 +264,6 @@ export default function Exercises() {
           </section>
         )
       })}
-
-      {archived.length ? (
-        <>
-          <h2 className="section-label">Deleted exercises</h2>
-          <div className="list">
-            {archived.map((exercise) => (
-              <article className="card" key={exercise.id}>
-                <div className="library-row">
-                  <div>
-                    <strong>{exercise.name}</strong>
-                    <div className="tiny">Hidden from workouts</div>
-                  </div>
-                  <button
-                    type="button"
-                    className="tiny"
-                    onClick={() => archiveExercise(exercise.id, false)}
-                  >
-                    Restore
-                  </button>
-                </div>
-              </article>
-            ))}
-          </div>
-        </>
-      ) : null}
 
       {addingTo ? (
         <ExercisePicker
