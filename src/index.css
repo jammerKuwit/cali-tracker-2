@@ -121,7 +121,7 @@ p {
   overflow-y: auto;
   overscroll-behavior: contain;
   -webkit-overflow-scrolling: touch;
-  padding: 20px 16px 56px;
+  padding: 20px 16px 72px;
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
@@ -342,7 +342,7 @@ p {
   display: grid;
   grid-template-columns: 1fr 1fr 56px 1fr 1fr;
   align-items: end;
-  padding: 6px 8px 2px;
+  padding: 8px 8px;
   background: var(--bg);
   border-top: 1px solid var(--border);
   z-index: 20;
@@ -782,6 +782,24 @@ p {
   margin-bottom: 12px;
 }
 
+.workout-days-toggle {
+  justify-content: space-between;
+  padding: 0 16px;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border);
+}
+
+.workout-days-toggle.open {
+  color: var(--accent-ink);
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.workout-days-editor {
+  margin-top: 12px;
+}
+
 .exercise-day-head {
   margin-bottom: 12px;
 }
@@ -811,6 +829,18 @@ p {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 10px;
+}
+
+.exercise-group + .exercise-group {
+  margin-top: 22px;
+}
+
+.exercise-group-title {
+  margin: 0 0 10px;
+  font-family: var(--display);
+  font-size: 22px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
 
 .danger-text {

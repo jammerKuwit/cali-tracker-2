@@ -18,6 +18,7 @@ export default function Exercises() {
   const [category, setCategory] = useState('push')
   const [error, setError] = useState(null)
   const [saving, setSaving] = useState(false)
+  const [editingDays, setEditingDays] = useState(false)
 
   const active = exercises.filter((exercise) => !exercise.archived)
   const archived = exercises.filter((exercise) => exercise.archived)
@@ -113,76 +114,89 @@ export default function Exercises() {
 
       {error ? <div className="error-banner">{error}</div> : null}
 
-      <h2 className="section-label">Default workout days</h2>
-      {DAY_TEMPLATES.map((day) => {
-        const template = templates.find((item) => item.id === day.id)
-        const ids = (template?.exerciseIds || []).filter((id) => byId[id])
+      <button
+        type="button"
+        className={`btn btn-block workout-days-toggle${editingDays ? ' open' : ''}`}
+        onClick={() => setEditingDays((open) => !open)}
+        aria-expanded={editingDays}
+      >
+        <span>{editingDays ? 'Done editing workout days' : 'Edit default workout days'}</span>
+        <span aria-hidden="true">{editingDays ? '−' : '+'}</span>
+      </button>
 
-        return (
-          <section className="card exercise-day-card" key={day.id}>
-            <div className="library-row exercise-day-head">
-              <h2 className="exercise-day-title">{day.name}</h2>
-              <span className="tiny">{ids.length} exercises</span>
-            </div>
+      {editingDays ? (
+        <div className="workout-days-editor">
+          {DAY_TEMPLATES.map((day) => {
+            const template = templates.find((item) => item.id === day.id)
+            const ids = (template?.exerciseIds || []).filter((id) => byId[id])
 
-            {ids.length ? (
-              <div className="list exercise-day-list">
-                {ids.map((id, index) => {
-                  const exercise = byId[id]
-                  return (
-                    <div className="template-row" key={id}>
-                      <div>
-                        <strong>{exercise.name}</strong>
-                        <div className="tiny">
-                          {CATEGORY_LABEL[exercise.category]} · {exercise.type}
+            return (
+              <section className="card exercise-day-card" key={day.id}>
+                <div className="library-row exercise-day-head">
+                  <h2 className="exercise-day-title">{day.name}</h2>
+                  <span className="tiny">{ids.length} exercises</span>
+                </div>
+
+                {ids.length ? (
+                  <div className="list exercise-day-list">
+                    {ids.map((id, index) => {
+                      const exercise = byId[id]
+                      return (
+                        <div className="template-row" key={id}>
+                          <div>
+                            <strong>{exercise.name}</strong>
+                            <div className="tiny">
+                              {CATEGORY_LABEL[exercise.category]} · {exercise.type}
+                            </div>
+                          </div>
+                          <div className="template-actions">
+                            <button
+                              type="button"
+                              className="icon-btn"
+                              aria-label={`Move ${exercise.name} up`}
+                              onClick={() => move(day.id, index, -1)}
+                              disabled={index === 0}
+                            >
+                              ↑
+                            </button>
+                            <button
+                              type="button"
+                              className="icon-btn"
+                              aria-label={`Move ${exercise.name} down`}
+                              onClick={() => move(day.id, index, 1)}
+                              disabled={index === ids.length - 1}
+                            >
+                              ↓
+                            </button>
+                            <button
+                              type="button"
+                              className="icon-btn danger"
+                              aria-label={`Remove ${exercise.name} from ${day.name}`}
+                              onClick={() => removeFromDay(day.id, id)}
+                            >
+                              ×
+                            </button>
+                          </div>
                         </div>
-                      </div>
-                      <div className="template-actions">
-                        <button
-                          type="button"
-                          className="icon-btn"
-                          aria-label={`Move ${exercise.name} up`}
-                          onClick={() => move(day.id, index, -1)}
-                          disabled={index === 0}
-                        >
-                          ↑
-                        </button>
-                        <button
-                          type="button"
-                          className="icon-btn"
-                          aria-label={`Move ${exercise.name} down`}
-                          onClick={() => move(day.id, index, 1)}
-                          disabled={index === ids.length - 1}
-                        >
-                          ↓
-                        </button>
-                        <button
-                          type="button"
-                          className="icon-btn danger"
-                          aria-label={`Remove ${exercise.name} from ${day.name}`}
-                          onClick={() => removeFromDay(day.id, id)}
-                        >
-                          ×
-                        </button>
-                      </div>
-                    </div>
-                  )
-                })}
-              </div>
-            ) : (
-              <p className="muted exercise-day-empty">No default exercises yet.</p>
-            )}
+                      )
+                    })}
+                  </div>
+                ) : (
+                  <p className="muted exercise-day-empty">No default exercises yet.</p>
+                )}
 
-            <button
-              type="button"
-              className="btn btn-ghost btn-block"
-              onClick={() => setAddingTo(day.id)}
-            >
-              Add exercise
-            </button>
-          </section>
-        )
-      })}
+                <button
+                  type="button"
+                  className="btn btn-ghost btn-block"
+                  onClick={() => setAddingTo(day.id)}
+                >
+                  Add exercise
+                </button>
+              </section>
+            )
+          })}
+        </div>
+      ) : null}
 
       <h2 className="section-label">Add an exercise</h2>
       <form onSubmit={handleAdd} className="card exercise-create">
@@ -222,27 +236,35 @@ export default function Exercises() {
       </form>
 
       <h2 className="section-label">All exercises</h2>
-      <div className="list">
-        {active.map((exercise) => (
-          <article className="card" key={exercise.id}>
-            <div className="library-row">
-              <div>
-                <strong>{exercise.name}</strong>
-                <div className="tiny">
-                  {CATEGORY_LABEL[exercise.category]} · {exercise.type}
-                </div>
-              </div>
-              <button
-                type="button"
-                className="tiny danger-text"
-                onClick={() => handleDelete(exercise)}
-              >
-                Delete
-              </button>
+      {CATEGORIES.map((group) => {
+        const groupedExercises = active.filter((exercise) => exercise.category === group.id)
+        if (!groupedExercises.length) return null
+
+        return (
+          <section className="exercise-group" key={group.id}>
+            <h3 className="exercise-group-title">{group.label}</h3>
+            <div className="list">
+              {groupedExercises.map((exercise) => (
+                <article className="card" key={exercise.id}>
+                  <div className="library-row">
+                    <div>
+                      <strong>{exercise.name}</strong>
+                      <div className="tiny">{exercise.type}</div>
+                    </div>
+                    <button
+                      type="button"
+                      className="tiny danger-text"
+                      onClick={() => handleDelete(exercise)}
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </article>
+              ))}
             </div>
-          </article>
-        ))}
-      </div>
+          </section>
+        )
+      })}
 
       {archived.length ? (
         <>
