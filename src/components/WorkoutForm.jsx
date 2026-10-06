@@ -340,7 +340,7 @@ export default function WorkoutForm({ exercises, initialDate, existing, initialD
         <>
           <div className="library-row" style={{ marginBottom: 10 }}>
             <span className="field-label">Day type</span>
-            <Link to="/templates" className="tiny">
+            <Link to="/exercises" className="tiny">
               Edit my days
             </Link>
           </div>
@@ -355,7 +355,7 @@ export default function WorkoutForm({ exercises, initialDate, existing, initialD
                   className={`day-pick${selectedDay === day.id ? ' on' : ''}`}
                   onClick={() => {
                     if (!count) {
-                      navigate(`/templates`)
+                      navigate('/exercises')
                       return
                     }
                     applyDay(day.id)
@@ -372,7 +372,7 @@ export default function WorkoutForm({ exercises, initialDate, existing, initialD
           {selectedDay && !(templates.find((t) => t.id === selectedDay)?.exerciseIds?.length) ? (
             <p className="empty" style={{ padding: '8px 0 16px' }}>
               {DAY_LABEL[selectedDay]} has no exercises yet.{' '}
-              <Link to="/templates">Set it up</Link>
+              <Link to="/exercises">Set it up</Link>
             </p>
           ) : null}
         </>

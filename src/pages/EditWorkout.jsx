@@ -8,7 +8,7 @@ export default function EditWorkout() {
   const workout = workouts.find((w) => w.id === id)
 
   if (!ready) return null
-  if (!workout) return <Navigate to="/history" replace />
+  if (!workout) return <Navigate to="/calendar" replace />
 
   return <WorkoutForm exercises={exercises} existing={workout} initialDate={workout.date} />
 }

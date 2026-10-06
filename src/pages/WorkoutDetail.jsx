@@ -15,7 +15,7 @@ export default function WorkoutDetail() {
   const workout = workouts.find((w) => w.id === id)
 
   if (!ready) return null
-  if (!workout) return <Navigate to="/history" replace />
+  if (!workout) return <Navigate to="/calendar" replace />
 
   async function handleDelete() {
     if (!window.confirm('Delete this workout?')) return
@@ -24,7 +24,7 @@ export default function WorkoutDetail() {
       const paths = (workout.exercises || []).map((e) => e.mediaPath).filter(Boolean)
       await Promise.all(paths.map((p) => deleteMedia(p)))
       await deleteWorkoutDoc(workout.id)
-      navigate('/history')
+      navigate('/calendar')
     } catch (err) {
       setBusy(false)
       window.alert(err.message || 'Could not delete')

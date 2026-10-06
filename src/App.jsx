@@ -3,11 +3,9 @@ import { DataProvider } from './context/DataContext'
 import Layout from './components/Layout'
 import Home from './pages/Home'
 import Log from './pages/Log'
-import History from './pages/History'
 import CalendarPage from './pages/Calendar'
 import Progress from './pages/Progress'
-import Library from './pages/Library'
-import Templates from './pages/Templates'
+import Exercises from './pages/Exercises'
 import WorkoutDetail from './pages/WorkoutDetail'
 import EditWorkout from './pages/EditWorkout'
 
@@ -19,11 +17,11 @@ export default function App() {
           <Route element={<Layout />}>
             <Route index element={<Home />} />
             <Route path="log" element={<Log />} />
-            <Route path="history" element={<History />} />
             <Route path="calendar" element={<CalendarPage />} />
             <Route path="progress" element={<Progress />} />
-            <Route path="library" element={<Library />} />
-            <Route path="templates" element={<Templates />} />
+            <Route path="exercises" element={<Exercises />} />
+            <Route path="library" element={<Navigate to="/exercises" replace />} />
+            <Route path="templates" element={<Navigate to="/exercises" replace />} />
             <Route path="workout/:id" element={<WorkoutDetail />} />
             <Route path="workout/:id/edit" element={<EditWorkout />} />
             <Route path="*" element={<Navigate to="/" replace />} />

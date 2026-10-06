@@ -94,11 +94,11 @@ export default function ExercisePicker({
             ))
           )}
           <Link
-            to="/library"
+            to="/exercises"
             className="btn btn-ghost btn-block"
             style={{ marginTop: 16, marginBottom: 12 }}
           >
-            Manage library
+            Manage exercises
           </Link>
         </div>
       </div>

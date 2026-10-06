@@ -12,11 +12,11 @@ const items = [
     ),
   },
   {
-    to: '/history',
-    label: 'History',
+    to: '/progress',
+    label: 'Progress',
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-        <path d="M4 6h16M4 12h10M4 18h16" />
+        <path d="M4 19V9M10 19V5M16 19v-7M20 19H4" />
       </svg>
     ),
   },
@@ -41,11 +41,11 @@ const items = [
     ),
   },
   {
-    to: '/progress',
-    label: 'Progress',
+    to: '/exercises',
+    label: 'Exercises',
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-        <path d="M4 19V9M10 19V5M16 19v-7M20 19H4" />
+        <path d="M6 9v6M3.5 10.5v3M18 9v6M20.5 10.5v3M6 12h12" />
       </svg>
     ),
   },

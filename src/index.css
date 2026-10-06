@@ -774,6 +774,50 @@ p {
   align-items: center;
 }
 
+.home-days {
+  margin-top: 4px;
+}
+
+.exercise-day-card {
+  margin-bottom: 12px;
+}
+
+.exercise-day-head {
+  margin-bottom: 12px;
+}
+
+.exercise-day-title {
+  font-family: var(--display);
+  font-size: 24px;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.exercise-day-list {
+  gap: 0;
+  margin-bottom: 12px;
+}
+
+.exercise-day-empty {
+  margin-bottom: 12px;
+}
+
+.exercise-create {
+  margin-bottom: 4px;
+}
+
+.exercise-create-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.danger-text {
+  color: var(--blaze);
+  font-weight: 600;
+}
+
 .tiny {
   font-size: 12px;
   color: var(--text-muted);
